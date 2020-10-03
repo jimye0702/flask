@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head></head>
+<body>
+	<h3>
+		{% if user in ['Jim', 'Dave'] %}
+			Hello, {{ user }}!
+		{% else %}
+			Hello, Stranger!
+		{% endif %}
+	</h3>
+</body>
+</html>

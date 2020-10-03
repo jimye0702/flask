@@ -1,0 +1,37 @@
+﻿<!DOCTYPE html>
+{% extends 'base_bootstrap.html' %}
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    {% block title %} {{ super() }} {% endblock %}
+
+    {% block head %}
+        {{ super() }}
+    {% endblock %}
+
+    {% block scripts %}
+        {{ super() }}
+        {{ moment.include_moment() }}
+    {% endblock %}
+</head>
+
+<body>
+    {% block navbar %}
+        {{ super() }}
+    {% endblock %}
+
+    {% block content%}
+    <div class='container'>
+        {% block page_content %}
+            {{ super() }}
+        {% endblock %}
+        <h2>Format()</h2>
+        <p style="text-indent:2em">The local date and time is {{ moment(current_time).format('lll') }}</p>
+        <p style="text-indent:2em">The local date and time is {{ moment(current_time).format('MMMM Do YYYY, h:mm:ss a') }}</p>
+        <h2>FromNow()</h2>
+        <p style="text-indent:2em">That was {{ moment(current_time).fromNow(refresh=True) }}</p>
+    </div>
+    {% endblock %}
+</body>
+</html>

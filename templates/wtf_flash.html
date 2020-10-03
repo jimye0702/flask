@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+{% extends 'base_bootstrap.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+<head>
+    <meta charset="utf-8" />
+    {% block title %}
+    {{ super() }}
+    {% endblock %}
+
+    {% block head %}
+    {{ super() }}
+    {% endblock %}
+
+</head>
+<body>
+    {% block content %}
+    <div class="container">
+        {% for message in get_flashed_messages() %}
+        <div class="alert alert-warning">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            {{ message }}
+        </div>
+        {% endfor %}
+
+        {% block page_content %}
+        <div class="page-header">
+            <h1>
+                Hello, {% if name %} {{ name | capitalize }} {% else %} Stranger {% endif %}
+            </h1>
+        </div>
+        {{ wtf.quick_form(form) }}
+        {% endblock %}
+
+    </div>
+    {% endblock %}
+</body>
+</html>
