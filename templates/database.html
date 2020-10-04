@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+{% extends 'base_bootstrap.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+<head>
+    <meta charset="utf-8" />
+
+    {% block title %}
+    {{ super() }}
+    {% endblock %}
+
+    {% block head %}
+    {{ super() }}
+    {% endblock %}
+
+</head>
+<body>
+    {% block page_content %}
+    <div class="page-header">
+        <h1>
+            Hello,
+            {% if name %}
+                {{ name | capitalize }}
+            {% else %}
+                Stranger
+            {% endif %}
+        </h1>
+    
+        {% if not known %}
+           <p>Pleased to meet you!</p>
+        {% else %}
+           <p>Happy to see you again!</p>
+        {% endif %}
+    </div>
+
+    {{ wtf.quick_form(form) }}
+    {% endblock %}
+</body>
+</html>
