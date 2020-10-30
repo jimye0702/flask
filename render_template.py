@@ -25,20 +25,25 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 '''set Email config'''
-app.config['MAIL_SERVER'] = 'smtp.googlemail.com'
+#https://pythonhosted.org/Flask-Mail/
+
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
-app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USE_SSL'] = True
 app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
 app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
-app.config['FLASKY_MAIL_SUBJECT_PREFIX'] = '[Flasky]'
-app.config['FLASKY_MAIL_SENDER'] = 'Flasky Admin jimye0702@gmail.com'
-app.config['FLASKY_ADMIN'] = os.getenv('FLASKY_ADMIN')
 
 mail = Mail(app)
 
 class ProfileForm(FlaskForm):
     name = StringField('What is your name?', validators=[DataRequired()])
     age = StringField('How old are you?', validators=[DataRequired()])
+    submit = SubmitField('Submit')
+    
+class MailForm(FlaskForm):
+    name = StringField('What is your name?', validators=[DataRequired()])
+    age = StringField('How old are you?', validators=[DataRequired()])
+    receiptor = StringField('fill the email address', validators=[DataRequired()])
     submit = SubmitField('Submit')
     
 class Role(db.Model):
@@ -59,6 +64,7 @@ class User(db.Model):
     def __repr__(self):
         return '<User %r>' % self.username
 
+'''
 def send_email(to, subject, template, **kwargs):
     msg = Message(app.config['FLASKY_MAIL_SUBJECT_PREFIX'] + subject, 
                   sender=app.config['FLASKY_MAIL_SENDER'], recipients=[to])
@@ -66,6 +72,7 @@ def send_email(to, subject, template, **kwargs):
     msg.html = render_template(template + '.html', **kwargs)
     mail.send(msg)
     return ''
+'''
 
 @app.route('/')
 def index():
@@ -150,25 +157,26 @@ def database():
                             age=session.get('age'), known=session.get('known', False))
 
 @app.route('/mail', methods=['GET', 'POST'])
-def mail():
-    form = ProfileForm()
+def welcome_mail():
+    form = MailForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(username=form.name.data).first()
-        if user is None:
-            user = User(form.name.data)
-            db.session.add(user)
-            session['known'] = False
-            if app.config['FLASKY_ADMIN']:
-                send_email(app.config['FLASKY_ADMIN'], 'New User', 'mail/new_user', 
-                           user=user, age=session.get('age'))
-        else:
-            session['known'] = True
-        
         session['name'] = form.name.data
-        form.name.data = ''
-        return redirect(url_for('mail'))
-    return render_template('email.html', form=form, name=session.get('name'),
-                            age=session.get('age'), known=session.get('known', False))
+        session['age'] = form.age.data
+        session['mail_address'] = form.receiptor.data
+        subject = 'Welcome, {}'.format(session.get('name'))
+
+        message = '<b>Welcome Flask Mail Test</b>'
+        
+        msg = Message(subject=subject,
+                      sender=app.config['MAIL_USERNAME'],
+                      recipients=[session.get('mail_address')],
+                      html=message)
+        
+        mail.send(msg)
+        
+        return redirect(url_for('welcome_mail'))
+    return render_template('email.html', form=form, name=session.get('name'), 
+                            age=session.get('age'), receiptor=session.get('mail_address'))
 
 @app.errorhandler(404)
 def page_not_found(e):
