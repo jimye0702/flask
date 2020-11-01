@@ -178,6 +178,28 @@ def welcome_mail():
     return render_template('email.html', form=form, name=session.get('name'), 
                             age=session.get('age'), receiptor=session.get('mail_address'))
 
+@app.route('/bulk_mail', methods=['Get', 'POST'])
+def bulk_mail():
+    form = MailForm()
+    if form.validate_on_submit():
+        mails = form.receiptor.data
+        session['mail_address'] = mails.split(';')
+        
+        with mail.connect() as conn:
+            for receiptor in session.get('mail_address'):
+                subject = 'Bulk mail'
+                message = '<h1> This is bulk mail Test </h1>'
+        
+                msg = Message(subject=subject,
+                              sender=app.config['MAIL_USERNAME'],
+                              recipients=[receiptor],
+                              html=message)
+                      
+                conn.send(msg)
+        
+        return redirect(url_for('bulk_mail'))
+    return render_template('email.html', form=form, receiptor=session.get('mail_address'))
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('error page.html')

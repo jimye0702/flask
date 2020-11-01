@@ -26,12 +26,12 @@
     </div>
 
     {{ wtf.quick_form(form) }}
-    {% endblock %}
-
+    <br />
     <div>
         <p>username: {{ name | capitalize }}</p>
         <p>age: {{ age }}</p>
-        <p>mail: {{ mail_address }}</p>
+        <p>mail_to: {{ receiptor }}</p>
     </div>
+    {% endblock %}
 </body>
 </html>
