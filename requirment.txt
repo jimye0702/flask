@@ -1,11 +1,13 @@
 # packages in environment at C:\Users\user\Anaconda3\envs\dev_web:
 #
 # Name                    Version                   Build  Channel
+blinker                   1.4                      pypi_0    pypi
 certifi                   2019.11.28               py36_0  
 click                     7.0                      pypi_0    pypi
 dominate                  2.5.1                    pypi_0    pypi
 flask                     1.1.1                    pypi_0    pypi
 flask-bootstrap           3.3.7.1                  pypi_0    pypi
+flask-mail                0.9.1                    pypi_0    pypi
 flask-moment              0.10.0                   pypi_0    pypi
 flask-sqlalchemy          2.4.4                    pypi_0    pypi
 flask-wtf                 0.14.3                   pypi_0    pypi
